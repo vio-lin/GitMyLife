@@ -11,6 +11,7 @@
 
     <modules>
         <module>test-tool</module>
+        <module>dubbo-test</module>
     </modules>
 
     <dependencies>
