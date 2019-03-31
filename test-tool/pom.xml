@@ -9,17 +9,16 @@
         <artifactId>earth.online</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+
     <groupId>com.violin.life</groupId>
     <artifactId>test-tool</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-
     <dependencies>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>19.0</version>
         </dependency>
     </dependencies>
 </project>
