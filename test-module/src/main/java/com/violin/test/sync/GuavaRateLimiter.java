@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 public class GuavaRateLimiter {
 
     public static void main(String[] args) {
-        RateLimiter rateLimiter = RateLimiter.create(1,30,TimeUnit.SECONDS);
+        RateLimiter rateLimiter = RateLimiter.create(0.2,30,TimeUnit.SECONDS);
         for (int i = 0; i < 30; i++) {
             new Thread(()->{
                 rateLimiter.acquire();

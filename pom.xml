@@ -12,7 +12,8 @@
     <modules>
         <module>test-module</module>
         <module>test-tool</module>
-        <module>dubbo-test</module>
+        <module>test-dubbo</module>
+        <module>rpc-client</module>
     </modules>
 
     <properties>

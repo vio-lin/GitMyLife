@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>com.violin.life</groupId>
-    <artifactId>test-module</artifactId>
+    <artifactId>test.module</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
