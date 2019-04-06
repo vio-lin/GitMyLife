@@ -1,6 +1,5 @@
 package com.violin.rpc.server;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
@@ -11,8 +10,8 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 public class ViolinHandlerAdapter extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) { // (2)
-        // Discard the received data silently.
-        ((ByteBuf) msg).release(); // (3)
+        ctx.write(msg); // (1)
+        ctx.flush(); // (2)
     }
 
     @Override

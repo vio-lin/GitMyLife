@@ -1,5 +1,6 @@
 package com.violin.rpc.server;
 
+import com.violin.rpc.coder.TimeEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -30,7 +31,7 @@ public class NettyServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new ViolinHandlerAdapter());
+                            ch.pipeline().addLast(new TimeEncoder(),new ChannelInboundHandlerAdapter());
                         }
                     }).option(ChannelOption.SO_BACKLOG,128)
                     .childOption(ChannelOption.SO_KEEPALIVE,true);
