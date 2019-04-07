@@ -7,7 +7,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
  * @author lin
  * Date: 2019-04-05
  */
-public class ViolinHandlerAdapter extends ChannelInboundHandlerAdapter {
+public class ServerHandlerAdapter extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) { // (2)
         ctx.write(msg); // (1)

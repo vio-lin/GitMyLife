@@ -1,6 +1,6 @@
 package com.violin.rpc.client;
 
-import com.violin.rpc.coder.TimeDecoder;
+import com.violin.rpc.coder.RpcDecoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -11,7 +11,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
  * @author lin
  * Date: 2019-04-06
  */
-public class TimeClient {
+public class NettyClient {
     public static void main(String[] args) throws InterruptedException {
         int hostPort = 8080;
         EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -25,7 +25,7 @@ public class TimeClient {
 
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
-                    ch.pipeline().addLast(new TimeDecoder(),new TimeClientHandler());
+                    ch.pipeline().addLast(new RpcDecoder(),new com.violin.rpc.client.ClientHandler());
                 }
             });
             ChannelFuture f = b.connect("127.0.0.1",hostPort).sync();

@@ -13,7 +13,7 @@ import java.util.Date;
  * @author lin
  * Date: 2019-04-06
  */
-public class TimeClientHandler extends ChannelInboundHandlerAdapter {
+public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
