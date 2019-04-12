@@ -10,7 +10,7 @@ public class RpcRequest implements Serializable {
   private long id;
   private Object object;
   private String event;
-  private static final String HEART_BEAT_EVENT = null;
+  public static final String HEART_BEAT_EVENT = null;
 
   public RpcRequest(long id) {
     this.id = id;

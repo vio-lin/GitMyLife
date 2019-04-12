@@ -10,8 +10,10 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToByteEncoder;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
 
 /**
@@ -31,6 +33,7 @@ public class RpcCodecAdapter {
   private static final byte FLAG_EVENT = (byte) 0x40;
   private static final byte SERIALIZATION_MASK = 0x07;
 
+  private long id;
   // TODO 后续添加一个logger
 
   private final ChannelHandler encode = new InternalEncode();
@@ -122,7 +125,7 @@ public class RpcCodecAdapter {
   }
 
   private Object readJavaSerializationObject(byte[] objectBytes) {
-    // TODO 考虑下这边你的log怎么打
+    // TODO 考虑下这边的log怎么打
     ObjectInputStream objectInputStream = null;
     try {
       objectInputStream = new ObjectInputStream(new ByteArrayInputStream(objectBytes));
@@ -149,12 +152,47 @@ public class RpcCodecAdapter {
     protected void encode(ChannelHandlerContext ctx, Object msg, ByteBuf out) throws Exception {
       if(msg instanceof RpcRequest){
         // encode request
-
+        RpcRequest request = (RpcRequest) msg;
+        out.writeByte(MAGIC_HIGH);
+        out.writeByte(MAGIC_HIGH);
+        byte flag = (byte) 0x0;
+        flag|=FLAG_REQUEST;
+        if(request.getEvent()==RpcRequest.HEART_BEAT_EVENT){
+          flag|=FLAG_EVENT;
+        }
+        out.writeByte(flag);
+        out.writeByte(0x00);
+        request.getObject();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(request.getObject());
+        byte[] requestBody = baos.toByteArray();
+        out.writeLong(request.getId());
+        out.writeInt(requestBody.length);
+        out.writeBytes(requestBody);
+        out.writableBytes();
       }else{
-
+        // encode request
+        RpcResponse request = (RpcResponse) msg;
+        out.writeByte(MAGIC_HIGH);
+        out.writeByte(MAGIC_HIGH);
+        byte flag = (byte) 0x0;
+        flag|=FLAG_REQUEST;
+        if(request.getEvent()==RpcRequest.HEART_BEAT_EVENT){
+          flag|=FLAG_EVENT;
+        }
+        out.writeByte(flag);
+        out.writeByte(0x00);
+        request.getObject();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(request.getObject());
+        byte[] requestBody = baos.toByteArray();
+        out.writeLong(request.getId());
+        out.writeInt(requestBody.length);
+        out.writeBytes(requestBody);
+        out.writableBytes();
       }
     }
   }
-
-
 }
