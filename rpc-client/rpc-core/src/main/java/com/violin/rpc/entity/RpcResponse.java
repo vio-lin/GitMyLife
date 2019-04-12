@@ -7,8 +7,9 @@ package com.violin.rpc.entity;
  */
 public class RpcResponse {
     public static final String HEARTBEAT_EVENT = null;
-    long id;
-    String event;
+    private long id;
+    private String event;
+    private Object object;
 
     public long getId() {
         return id;
@@ -30,11 +31,16 @@ public class RpcResponse {
         return HEARTBEAT_EVENT;
     }
 
+    public Object getObject() {
+        return object;
+    }
+
+    public void setObject(Object object) {
+        this.object = object;
+    }
+
     public RpcResponse(long id) {
-
+        this.id = id;
     }
 
-    enum MESSAGER_TYPE{
-        MESSAGE,Event;
-    }
 }

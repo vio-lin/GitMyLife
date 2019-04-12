@@ -1,8 +1,11 @@
 package com.violin.rpc.client;
 
-import com.violin.rpc.coder.RpcDecoder;
+import com.violin.rpc.coder.RpcCodecAdapter;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.*;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -25,7 +28,7 @@ public class NettyClient {
 
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
-                    ch.pipeline().addLast(new RpcDecoder(),new com.violin.rpc.client.ClientHandler());
+                    ch.pipeline().addLast(new RpcCodecAdapter().getDecode(),new com.violin.rpc.client.ClientHandler());
                 }
             });
             ChannelFuture f = b.connect("127.0.0.1",hostPort).sync();
