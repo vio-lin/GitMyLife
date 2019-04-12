@@ -33,18 +33,18 @@ public class ChannelInboundHandlerAdapter extends io.netty.channel.ChannelInboun
         ctx.close();
     }
 
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        final ByteBuf time = ctx.alloc().buffer(4);
-        time.writeInt((int) (System.currentTimeMillis()/1000L+220898800L));
-
-        final ChannelFuture f = ctx.writeAndFlush(time);
-        f.addListener(new ChannelFutureListener() {
-            @Override
-            public void operationComplete(ChannelFuture future) throws Exception {
-                assert f == future;
-                ctx.close();
-            }
-        });
-    }
+//    @Override
+//    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+//        final ByteBuf time = ctx.alloc().buffer(4);
+//        time.writeInt((int) (System.currentTimeMillis()/1000L+220898800L));
+//
+//        final ChannelFuture f = ctx.writeAndFlush(time);
+//        f.addListener(new ChannelFutureListener() {
+//            @Override
+//            public void operationComplete(ChannelFuture future) throws Exception {
+//                assert f == future;
+//                ctx.close();
+//            }
+//        });
+//    }
 }

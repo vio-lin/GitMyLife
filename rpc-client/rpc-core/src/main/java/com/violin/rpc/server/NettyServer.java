@@ -10,6 +10,9 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+
 /**
  * @author lin
  * Date: 2019-04-05
@@ -41,6 +44,7 @@ public class NettyServer {
             // Wait until the server socket is closed.
             // In this example, this does not happen, but you can do that to gracefully
             // shut down your server.
+            System.in.read();
             f.channel().closeFuture().sync();
         }finally {
             boosGroup.shutdownGracefully();

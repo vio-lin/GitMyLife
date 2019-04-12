@@ -55,7 +55,7 @@ public class RpcCodecAdapter {
       byte[] header = new byte[Math.min(readable, HEADER_LENGTH)];
       in.readBytes(header);
       // check magic number
-      if (readable > 0 && header[0] != MAGIC || readable > 1 && header[1] != MAGIC_LOW) {
+      if (readable > 0 && header[0] != MAGIC_HIGH || readable > 1 && header[1] != MAGIC_LOW) {
         int length = header.length;
         if (header.length < readable) {
           header = ByteUtil.copyOf(header, readable);
@@ -154,7 +154,7 @@ public class RpcCodecAdapter {
         // encode request
         RpcRequest request = (RpcRequest) msg;
         out.writeByte(MAGIC_HIGH);
-        out.writeByte(MAGIC_HIGH);
+        out.writeByte(MAGIC_LOW);
         byte flag = (byte) 0x0;
         flag|=FLAG_REQUEST;
         if(request.getEvent()==RpcRequest.HEART_BEAT_EVENT){
@@ -170,7 +170,6 @@ public class RpcCodecAdapter {
         out.writeLong(request.getId());
         out.writeInt(requestBody.length);
         out.writeBytes(requestBody);
-        out.writableBytes();
       }else{
         // encode request
         RpcResponse request = (RpcResponse) msg;
@@ -191,7 +190,6 @@ public class RpcCodecAdapter {
         out.writeLong(request.getId());
         out.writeInt(requestBody.length);
         out.writeBytes(requestBody);
-        out.writableBytes();
       }
     }
   }
