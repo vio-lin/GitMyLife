@@ -1,9 +1,6 @@
-package com.violin.rpc.server;
+package com.violin.rpc.transport.nett4;
 
 import com.violin.rpc.entity.RpcRequest;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 
 
@@ -12,7 +9,7 @@ import io.netty.channel.ChannelHandlerContext;
  * @author lin
  * Date: 2019-04-06
  */
-public class ChannelInboundHandlerAdapter extends io.netty.channel.ChannelInboundHandlerAdapter {
+public class ServerHandler extends io.netty.channel.ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if(msg instanceof RpcRequest){

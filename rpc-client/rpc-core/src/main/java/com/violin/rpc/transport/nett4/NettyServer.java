@@ -1,6 +1,5 @@
-package com.violin.rpc.server;
+package com.violin.rpc.transport.nett4;
 
-import com.violin.rpc.coder.RpcCodecAdapter;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -9,9 +8,6 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author lin
@@ -34,7 +30,7 @@ public class NettyServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new RpcCodecAdapter().getDecode(),new ChannelInboundHandlerAdapter());
+                            ch.pipeline().addLast(new RpcCodecAdapter().getDecode(),new ServerHandler());
                         }
                     }).option(ChannelOption.SO_BACKLOG,128)
                     .childOption(ChannelOption.SO_KEEPALIVE,true);

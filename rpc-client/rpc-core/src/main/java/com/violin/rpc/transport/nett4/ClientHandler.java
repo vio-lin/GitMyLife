@@ -1,4 +1,4 @@
-package com.violin.rpc.client;
+package com.violin.rpc.transport.nett4;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
