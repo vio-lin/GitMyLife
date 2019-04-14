@@ -79,7 +79,7 @@ public class NettyServer implements BaseServer {
 
     public static void main(String[] args) throws Exception {
         Map<String,String> params = new HashMap<>();
-        params.put()
-        new NettyServer(port).run();
+        params.put(IO_THREAD_COUNT,"1");
+
     }
 }
