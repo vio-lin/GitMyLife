@@ -34,4 +34,5 @@ day4 : 这段和请求解析一样的东西好难看
 day5 : 看了Dubbo官方文档关于message解析的部分
 day6 : 开始设计消息的格式 参考dubbo 简单一点  
 day7 ： respons的decode 写了一半吧 还有调试的时间
+day8 ： encode 和 decode 
 这周到周日 写完所有的 解码和编码器

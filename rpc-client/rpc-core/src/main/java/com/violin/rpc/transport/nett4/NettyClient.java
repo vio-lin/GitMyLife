@@ -13,11 +13,11 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.*;
 
-import static com.violin.rpc.constants.Constants.PORT;
-import static com.violin.rpc.constants.Constants.TREAD_COUNT;
+import static com.violin.rpc.constants.Constants.*;
 
 /**
  * @author lin
@@ -25,10 +25,13 @@ import static com.violin.rpc.constants.Constants.TREAD_COUNT;
  */
 public class NettyClient extends BaseClient {
     private static final String CLIENT_THREAD_NAME = "Rpc-Client-WorkThread";
+    EventLoopGroup workGroup;
+    private ChannelFuture f;
 
     NettyClient(Map<String, String> param) {
         String portString = param.get(PORT);
-        String threadsString = param.get(TREAD_COUNT);
+        String threadsString = param.get(THREAD_COUNT);
+        String hostString = param.get(HOST_ADDRESS);
         try {
             int port = Integer.parseInt(portString);
             int threads = Integer.parseInt(threadsString);
@@ -43,40 +46,59 @@ public class NettyClient extends BaseClient {
                     return new Thread(r, CLIENT_THREAD_NAME);
                 }
             });
-            EventLoopGroup workGroup = new NioEventLoopGroup(threads, executor);
+            workGroup = new NioEventLoopGroup(threads, executor);
             b.group(workGroup);
-            b.channel(NioSocketChannel.class);
-            b.option(ChannelOption.SO_KEEPALIVE)
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(e);
-        }
-
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        int hostPort = 8080;
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
-        try {
-            Bootstrap b = new Bootstrap();
-            b.group(workerGroup);
             b.channel(NioSocketChannel.class);
             b.option(ChannelOption.SO_KEEPALIVE, true);
             b.handler(new ChannelInitializer<SocketChannel>() {
-
                 @Override
-                protected void initChannel(SocketChannel ch) {
+                protected void initChannel(SocketChannel ch) throws Exception {
                     ch.pipeline().addLast(new RpcCodecAdapter().getEncode(), new ClientHandler());
                 }
             });
-            ChannelFuture f = b.connect("127.0.0.1", hostPort).sync();
+            f = b.connect(hostString, port).sync();
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(e);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void close() {
+        try {
+            f.channel().closeFuture().sync();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            f = null;
+            workGroup.shutdownGracefully();
+        }
+    }
+
+    public void send(Object msg) {
+        if (f != null) {
+            f.channel().writeAndFlush(msg);
+        } else {
+            throw new IllegalArgumentException("channel 不能为空");
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        Map<String,String> param = new HashMap<>();
+        param.put(PORT,"8080");
+        param.put(HOST_ADDRESS,"127.0.0.1");
+        param.put(THREAD_COUNT,"20");
+        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        try {
+            NettyClient client = new NettyClient(param);
             DemoRequest request = new DemoRequest();
             request.setInstant(Instant.now());
             request.setReq("some Request");
             RpcRequest rpcRequest = new RpcRequest(1000);
             rpcRequest.setEvent(null);
             rpcRequest.setObject(request);
-            f.channel().writeAndFlush(rpcRequest);
-            f.channel().closeFuture().sync();
+            client.send(rpcRequest);
+            client.close();
         } finally {
             workerGroup.shutdownGracefully();
         }

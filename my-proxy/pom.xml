@@ -18,7 +18,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>4.3.16.release</version>
         </dependency>
     </dependencies>
 </project>

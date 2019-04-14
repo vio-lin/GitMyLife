@@ -1,59 +1,85 @@
 package com.violin.rpc.transport.nett4;
 
+import com.violin.rpc.transport.BaseServer;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.*;
+
+import static com.violin.rpc.constants.Constants.IO_THREAD_COUNT;
+import static com.violin.rpc.constants.Constants.PORT;
+import static com.violin.rpc.constants.Constants.THREAD_COUNT;
 
 /**
  * @author lin
  * Date: 2019-04-05
  */
-public class NettyServer {
-    private int port;
+public class NettyServer implements BaseServer {
+    private static final String SERVER_WORK_THREAD = "SERVER_WORKER_THREAD";
+    private EventLoopGroup boosGroup;
+    private EventLoopGroup workGroup;
+    private ChannelFuture f;
+    Map<String,String> param;
 
-    public NettyServer(int port){
-        this.port = port;
+    public NettyServer(Map<String, String> param){
+        this.param = param;
     }
 
-    public void run()throws Exception{
-        EventLoopGroup boosGroup = new NioEventLoopGroup();
-        EventLoopGroup workGroup = new NioEventLoopGroup();
-        try{
-            ServerBootstrap bootstrap = new ServerBootstrap();
-            bootstrap.group(boosGroup,workGroup)
+    public void run() {
+        int ioThreads = Integer.parseInt(param.get(IO_THREAD_COUNT));
+        int threadCount = Integer.parseInt(param.get(THREAD_COUNT));
+        int port = Integer.parseInt(param.get(PORT));
+        boosGroup = new NioEventLoopGroup(ioThreads);
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(0, Integer.MAX_VALUE,
+                60L, TimeUnit.SECONDS,
+                new SynchronousQueue<Runnable>(), new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable r) {
+                return new Thread(r, SERVER_WORK_THREAD);
+            }
+        });
+        boosGroup = new NioEventLoopGroup(ioThreads);
+        workGroup = new NioEventLoopGroup(threadCount, executor);
+        try {
+            ServerBootstrap bootStrap = new ServerBootstrap();
+            bootStrap.group(boosGroup, workGroup)
                     .channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new RpcCodecAdapter().getDecode(),new ServerHandler());
+
                         }
-                    }).option(ChannelOption.SO_BACKLOG,128)
-                    .childOption(ChannelOption.SO_KEEPALIVE,true);
+                    }).option(ChannelOption.SO_BACKLOG, 128)
+                    .childOption(ChannelOption.SO_KEEPALIVE, true);
             // Bind and start to accept incoming connections.
-            // (7)
-            ChannelFuture f = bootstrap.bind(port).sync();
-            // Wait until the server socket is closed.
-            // In this example, this does not happen, but you can do that to gracefully
-            // shut down your server.
-            System.in.read();
-            f.channel().closeFuture().sync();
-        }finally {
-            boosGroup.shutdownGracefully();
-            workGroup.shutdownGracefully();
+            f = bootStrap.bind(port).sync();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        int port = 8080;
-        if (args.length > 0) {
-            port = Integer.parseInt(args[0]);
+    public void close() {
+        if (f != null) {
+            try {
+                f.channel().closeFuture().sync();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                boosGroup.shutdownGracefully();
+                workGroup.shutdownGracefully();
+            }
         }
+        f = null;
+    }
 
+    public static void main(String[] args) throws Exception {
+        Map<String,String> params = new HashMap<>();
+        params.put()
         new NettyServer(port).run();
     }
 }
