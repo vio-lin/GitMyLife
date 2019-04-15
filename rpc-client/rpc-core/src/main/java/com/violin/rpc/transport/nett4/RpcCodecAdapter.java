@@ -1,5 +1,6 @@
 package com.violin.rpc.transport.nett4;
 
+import com.violin.rpc.entity.RpcInvocation;
 import com.violin.rpc.entity.RpcRequest;
 import com.violin.rpc.entity.RpcResponse;
 import com.violin.rpc.util.ByteUtil;
@@ -74,6 +75,7 @@ public class RpcCodecAdapter {
       // check length
       if (readable < HEADER_LENGTH) {
         // TODO 需要更多的数据
+        return;
       }
       // get Data length.
       int len = ByteUtil.byte2int(header, 12);
@@ -81,6 +83,7 @@ public class RpcCodecAdapter {
       int tt = len + HEADER_LENGTH;
       if (readable < tt) {
         // TODO 需要更多数据
+        return;
       }
 
       // 输入足够的数据
@@ -129,7 +132,15 @@ public class RpcCodecAdapter {
     ObjectInputStream objectInputStream = null;
     try {
       objectInputStream = new ObjectInputStream(new ByteArrayInputStream(objectBytes));
-      return objectInputStream.readObject();
+      RpcInvocation invocation = new RpcInvocation();
+      String className = objectInputStream.readUTF();
+      invocation.setClassName(className);
+      String methodName = objectInputStream.readUTF();
+      invocation.setMethodName(methodName);
+      String paramType = objectInputStream.readUTF();
+      invocation.setParameters(paramType);
+      invocation.setRequestType(objectInputStream.readObject());
+      return invocation;
     } catch (IOException e) {
       e.printStackTrace();
     } catch (ClassNotFoundException e) {
@@ -144,6 +155,11 @@ public class RpcCodecAdapter {
       }
     }
     return null;
+  }
+
+  //TODO 考虑没有参数 或者 Invocation里面直接存储的是Class<?>[]
+  private String[] stringToClassArray(String parameterString) {
+    return parameterString.split(",");
   }
 
   private class InternalEncode extends MessageToByteEncoder {
@@ -164,9 +180,7 @@ public class RpcCodecAdapter {
         out.writeByte(0x00);
         request.getObject();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeObject(request.getObject());
-        byte[] requestBody = baos.toByteArray();
+        byte[] requestBody = encodeObject(baos,request);
         out.writeLong(request.getId());
         out.writeInt(requestBody.length);
         out.writeBytes(requestBody);
@@ -191,6 +205,12 @@ public class RpcCodecAdapter {
         out.writeInt(requestBody.length);
         out.writeBytes(requestBody);
       }
+    }
+
+    private byte[] encodeObject(ByteArrayOutputStream baos,RpcRequest request) throws IOException {
+      ObjectOutputStream oos = new ObjectOutputStream(baos);
+      oos.writeObject(request.getObject());
+      return baos.toByteArray();
     }
   }
 }
