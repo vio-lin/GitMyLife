@@ -18,11 +18,15 @@
         <module>test-dubbo</module>
         <!--手写rpc 调用-->
         <module>rpc-client</module>
+        <!--手写Proxy-->
         <module>my-proxy</module>
+        <module>spring-inject</module>
+        <!--扩展自己的spring注入-->
     </modules>
 
     <properties>
         <guava.version>21.0</guava.version>
+        <spring.version>4.3.9.RELEASE</spring.version>
     </properties>
 
     <dependencyManagement>
@@ -31,6 +35,16 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${spring.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

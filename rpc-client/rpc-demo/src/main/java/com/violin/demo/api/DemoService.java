@@ -5,5 +5,5 @@ package com.violin.demo.api;
  * Date: 2019-04-07
  */
 public interface DemoService {
-    DemoResponse invokeDemo(DemoRequest request);
+    DemoResponse call(DemoRequest request);
 }
