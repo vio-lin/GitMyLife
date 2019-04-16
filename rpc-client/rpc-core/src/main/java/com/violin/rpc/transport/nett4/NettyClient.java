@@ -1,7 +1,5 @@
 package com.violin.rpc.transport.nett4;
 
-import com.violin.demo.api.DemoRequest;
-import com.violin.rpc.entity.RpcRequest;
 import com.violin.rpc.transport.BaseClient;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
@@ -12,12 +10,15 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
-import java.time.Instant;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
-import static com.violin.rpc.constants.Constants.*;
+import static com.violin.rpc.constants.Constants.HOST_ADDRESS;
+import static com.violin.rpc.constants.Constants.PORT;
+import static com.violin.rpc.constants.Constants.THREAD_COUNT;
 
 /**
  * @author lin
@@ -28,7 +29,7 @@ public class NettyClient extends BaseClient {
     EventLoopGroup workGroup;
     private ChannelFuture f;
 
-    NettyClient(Map<String, String> param) {
+    public NettyClient(Map<String, String> param) {
         String portString = param.get(PORT);
         String threadsString = param.get(THREAD_COUNT);
         String hostString = param.get(HOST_ADDRESS);
@@ -82,26 +83,4 @@ public class NettyClient extends BaseClient {
             throw new IllegalArgumentException("channel 不能为空");
         }
     }
-
-    public static void main(String[] args) throws InterruptedException {
-        Map<String,String> param = new HashMap<>();
-        param.put(PORT,"8080");
-        param.put(HOST_ADDRESS,"127.0.0.1");
-        param.put(THREAD_COUNT,"20");
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
-        try {
-            NettyClient client = new NettyClient(param);
-            DemoRequest request = new DemoRequest();
-            request.setInstant(Instant.now());
-            request.setReq("some Request");
-            RpcRequest rpcRequest = new RpcRequest(1000);
-            rpcRequest.setEvent(null);
-            rpcRequest.setObject(request);
-            client.send(rpcRequest);
-            client.close();
-        } finally {
-            workerGroup.shutdownGracefully();
-        }
-    }
-
 }
