@@ -1,6 +1,8 @@
 package com.violin.demo.api.coreTest;
 
 import com.violin.demo.api.DemoRequest;
+import com.violin.demo.api.DemoService;
+import com.violin.rpc.entity.RpcInvocation;
 import com.violin.rpc.entity.RpcRequest;
 import com.violin.rpc.transport.nett4.NettyClient;
 import io.netty.channel.EventLoopGroup;
@@ -29,9 +31,15 @@ public class ClientStarter {
       DemoRequest request = new DemoRequest();
       request.setInstant(Instant.now());
       request.setReq("some Request");
+      RpcInvocation invocation = new RpcInvocation();
+      invocation.setMethodName("call");
+      invocation.setClassName(DemoService.class.getName());
+      invocation.setParameters(request);
+      invocation.setRequestType(DemoRequest.class.getName());
+
       RpcRequest rpcRequest = new RpcRequest(1000);
       rpcRequest.setEvent(null);
-      rpcRequest.setObject(request);
+      rpcRequest.setObject(invocation);
       client.send(rpcRequest);
       client.close();
     } finally {

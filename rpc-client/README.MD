@@ -41,3 +41,6 @@ day9 （4-15）： 尝试下Proxy的解法
 服务端 保存为对应map  
 客户端 生成Rpc调用的基类  
 需要实现proxy 还需要添加对应的  
+day 10(4-16):
+增加Invocation类用于 定位实现类与方法
+service：export 和 client：refer

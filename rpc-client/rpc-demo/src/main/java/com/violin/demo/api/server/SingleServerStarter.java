@@ -16,12 +16,13 @@ import java.util.Map;
 
 /**
  * @author guo.lin  2019/4/15
+ * 本地对于 使用两个代理实现服务的相互调用
  */
-public class ServerStarter {
+public class SingleServerStarter {
   public static Map<Class<?>, Object> proxyMap = new HashMap<>();
 
   public static void main(String[] args) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
-   ServerStarter application = new ServerStarter();
+   SingleServerStarter application = new SingleServerStarter();
    application.proxyInServer();
    application.proxyInClient();
   }

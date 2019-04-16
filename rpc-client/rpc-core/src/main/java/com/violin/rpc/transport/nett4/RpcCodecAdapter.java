@@ -138,8 +138,8 @@ public class RpcCodecAdapter {
       String methodName = objectInputStream.readUTF();
       invocation.setMethodName(methodName);
       String paramType = objectInputStream.readUTF();
-      invocation.setParameters(paramType);
-      invocation.setRequestType(objectInputStream.readObject());
+      invocation.setRequestType(paramType);
+      invocation.setParameters(objectInputStream.readObject());
       return invocation;
     } catch (IOException e) {
       e.printStackTrace();
@@ -166,33 +166,33 @@ public class RpcCodecAdapter {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, Object msg, ByteBuf out) throws Exception {
-      if(msg instanceof RpcRequest){
+      if (msg instanceof RpcRequest) {
         // encode request
         RpcRequest request = (RpcRequest) msg;
         out.writeByte(MAGIC_HIGH);
         out.writeByte(MAGIC_LOW);
         byte flag = (byte) 0x0;
-        flag|=FLAG_REQUEST;
-        if(request.getEvent()==RpcRequest.HEART_BEAT_EVENT){
-          flag|=FLAG_EVENT;
+        flag |= FLAG_REQUEST;
+        if (request.getEvent() == RpcRequest.HEART_BEAT_EVENT) {
+          flag |= FLAG_EVENT;
         }
         out.writeByte(flag);
         out.writeByte(0x00);
         request.getObject();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] requestBody = encodeObject(baos,request);
+        byte[] requestBody = writeJavaSerializationObject(baos, request);
         out.writeLong(request.getId());
         out.writeInt(requestBody.length);
         out.writeBytes(requestBody);
-      }else{
+      } else {
         // encode request
         RpcResponse request = (RpcResponse) msg;
         out.writeByte(MAGIC_HIGH);
         out.writeByte(MAGIC_HIGH);
         byte flag = (byte) 0x0;
-        flag|=FLAG_REQUEST;
-        if(request.getEvent()==RpcRequest.HEART_BEAT_EVENT){
-          flag|=FLAG_EVENT;
+        flag |= FLAG_REQUEST;
+        if (request.getEvent() == RpcRequest.HEART_BEAT_EVENT) {
+          flag |= FLAG_EVENT;
         }
         out.writeByte(flag);
         out.writeByte(0x00);
@@ -207,9 +207,13 @@ public class RpcCodecAdapter {
       }
     }
 
-    private byte[] encodeObject(ByteArrayOutputStream baos,RpcRequest request) throws IOException {
+    private byte[] writeJavaSerializationObject(ByteArrayOutputStream baos, RpcRequest request) throws IOException {
       ObjectOutputStream oos = new ObjectOutputStream(baos);
-      oos.writeObject(request.getObject());
+      RpcInvocation invocation = (RpcInvocation) request.getObject();
+      oos.writeUTF(invocation.getClassName());
+      oos.writeUTF(invocation.getMethodName());
+      oos.writeUTF(invocation.getRequestType());
+      oos.writeObject(invocation.getParameters());
       return baos.toByteArray();
     }
   }
