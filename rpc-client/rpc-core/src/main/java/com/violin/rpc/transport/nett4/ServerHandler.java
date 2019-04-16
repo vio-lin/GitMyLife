@@ -1,5 +1,6 @@
 package com.violin.rpc.transport.nett4;
 
+import com.violin.rpc.entity.RpcInvocation;
 import com.violin.rpc.entity.RpcRequest;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -17,6 +18,7 @@ public class ServerHandler extends io.netty.channel.ChannelInboundHandlerAdapter
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if(msg instanceof RpcRequest){
             RpcRequest request = (RpcRequest) msg;
+            RpcInvocation invocation = (RpcInvocation) request.getObject();
 
             System.out.println(request.getObject());
         }

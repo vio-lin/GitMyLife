@@ -6,8 +6,8 @@ package com.violin.rpc.entity;
 public class RpcInvocation {
   String methodName;
   String className;
-  String parameters;
-  Object requestType;
+  String requestType;
+  Object parameters;
 
   public String getMethodName() {
     return methodName;
@@ -25,23 +25,19 @@ public class RpcInvocation {
     this.className = className;
   }
 
-  public String getParameters() {
-    return parameters;
-  }
-
-  public void setParameters(String parameters) {
-    this.parameters = parameters;
-  }
-
-  public Object getRequestType() {
+  public String getRequestType() {
     return requestType;
   }
 
-  public void setRequestType(Object requestType) {
+  public void setRequestType(String requestType) {
     this.requestType = requestType;
   }
 
-  public void setRequestType(Object[] requestType) {
-    this.requestType = requestType;
+  public Object getParameters() {
+    return parameters;
+  }
+
+  public void setParameters(Object parameters) {
+    this.parameters = parameters;
   }
 }
