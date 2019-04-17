@@ -1,5 +1,6 @@
 package com.violin.rpc.transport.nett4;
 
+import com.violin.rpc.entity.RpcRequest;
 import com.violin.rpc.transport.BaseClient;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
@@ -15,6 +16,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static com.violin.rpc.constants.Constants.HOST_ADDRESS;
 import static com.violin.rpc.constants.Constants.PORT;
@@ -28,6 +30,7 @@ public class NettyClient extends BaseClient {
     private static final String CLIENT_THREAD_NAME = "Rpc-Client-WorkThread";
     EventLoopGroup workGroup;
     private ChannelFuture f;
+    private AtomicLong messageId = new AtomicLong();
 
     public NettyClient(Map<String, String> param) {
         String portString = param.get(PORT);
@@ -76,8 +79,9 @@ public class NettyClient extends BaseClient {
         }
     }
 
-    public void send(Object msg) {
+    public void send(RpcRequest msg) {
         if (f != null) {
+            msg.setId(messageId.getAndIncrement());
             f.channel().writeAndFlush(msg);
         } else {
             throw new IllegalArgumentException("channel 不能为空");
