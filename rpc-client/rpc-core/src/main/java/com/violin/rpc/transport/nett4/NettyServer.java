@@ -35,6 +35,7 @@ public class NettyServer implements BaseServer {
     this.param = param;
   }
 
+  @Override
   public void run() {
     int ioThreads = Integer.parseInt(param.get(IO_THREAD_COUNT));
     int threadCount = Integer.parseInt(param.get(THREAD_COUNT));
@@ -68,6 +69,7 @@ public class NettyServer implements BaseServer {
     }
   }
 
+  @Override
   public void close() {
     if (f != null) {
       try {

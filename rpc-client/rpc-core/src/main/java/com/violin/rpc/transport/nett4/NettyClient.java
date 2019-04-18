@@ -26,65 +26,67 @@ import static com.violin.rpc.constants.Constants.THREAD_COUNT;
  * @author lin
  * Date: 2019-04-06
  */
-public class NettyClient extends BaseClient {
-    private static final String CLIENT_THREAD_NAME = "Rpc-Client-WorkThread";
-    EventLoopGroup workGroup;
-    private ChannelFuture f;
-    private AtomicLong messageId = new AtomicLong();
+public class NettyClient implements BaseClient {
+  private static final String CLIENT_THREAD_NAME = "Rpc-Client-WorkThread";
+  EventLoopGroup workGroup;
+  private ChannelFuture f;
+  private AtomicLong messageId = new AtomicLong();
 
-    public NettyClient(Map<String, String> param) {
-        String portString = param.get(PORT);
-        String threadsString = param.get(THREAD_COUNT);
-        String hostString = param.get(HOST_ADDRESS);
-        try {
-            int port = Integer.parseInt(portString);
-            int threads = Integer.parseInt(threadsString);
-            Bootstrap b = new Bootstrap();
-            // TODO 线程池扩展放在后面
-            ThreadPoolExecutor executor = new ThreadPoolExecutor(threads, threads,
-                    0L, TimeUnit.MILLISECONDS,
-                    // TODO 转换成Lambda
-                    new LinkedBlockingQueue<>(), new ThreadFactory() {
-                @Override
-                public Thread newThread(Runnable r) {
-                    return new Thread(r, CLIENT_THREAD_NAME);
-                }
-            });
-            workGroup = new NioEventLoopGroup(threads, executor);
-            b.group(workGroup);
-            b.channel(NioSocketChannel.class);
-            b.option(ChannelOption.SO_KEEPALIVE, true);
-            b.handler(new ChannelInitializer<SocketChannel>() {
-                @Override
-                protected void initChannel(SocketChannel ch) throws Exception {
-                    ch.pipeline().addLast(new RpcCodecAdapter().getEncode(), new ClientHandler());
-                }
-            });
-            f = b.connect(hostString, port).sync();
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(e);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+  public NettyClient(Map<String, String> param) {
+    String portString = param.get(PORT);
+    String threadsString = param.get(THREAD_COUNT);
+    String hostString = param.get(HOST_ADDRESS);
+    try {
+      int port = Integer.parseInt(portString);
+      int threads = Integer.parseInt(threadsString);
+      Bootstrap b = new Bootstrap();
+      // TODO 线程池扩展放在后面
+      ThreadPoolExecutor executor = new ThreadPoolExecutor(threads, threads,
+              0L, TimeUnit.MILLISECONDS,
+              // TODO 转换成Lambda
+              new LinkedBlockingQueue<>(), new ThreadFactory() {
+        @Override
+        public Thread newThread(Runnable r) {
+          return new Thread(r, CLIENT_THREAD_NAME);
         }
+      });
+      workGroup = new NioEventLoopGroup(threads, executor);
+      b.group(workGroup);
+      b.channel(NioSocketChannel.class);
+      b.option(ChannelOption.SO_KEEPALIVE, true);
+      b.handler(new ChannelInitializer<SocketChannel>() {
+        @Override
+        protected void initChannel(SocketChannel ch) throws Exception {
+          ch.pipeline().addLast(new RpcCodecAdapter().getEncode(), new ClientHandler());
+        }
+      });
+      f = b.connect(hostString, port).sync();
+    } catch (NumberFormatException e) {
+      throw new IllegalArgumentException(e);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
     }
+  }
 
-    public void close() {
-        try {
-            f.channel().closeFuture().sync();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } finally {
-            f = null;
-            workGroup.shutdownGracefully();
-        }
+  @Override
+  public void close() {
+    try {
+      f.channel().closeFuture().sync();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    } finally {
+      f = null;
+      workGroup.shutdownGracefully();
     }
+  }
 
-    public void send(RpcRequest msg) {
-        if (f != null) {
-            msg.setId(messageId.getAndIncrement());
-            f.channel().writeAndFlush(msg);
-        } else {
-            throw new IllegalArgumentException("channel 不能为空");
-        }
+  @Override
+  public void send(RpcRequest msg) {
+    if (f != null) {
+      msg.setId(messageId.getAndIncrement());
+      f.channel().writeAndFlush(msg);
+    } else {
+      throw new IllegalArgumentException("channel 不能为空");
     }
+  }
 }

@@ -43,4 +43,7 @@ day9 （4-15）： 尝试下Proxy的解法
 需要实现proxy 还需要添加对应的  
 day 10(4-16):
 增加Invocation类用客户端搜寻服务端的方法  
-service：export 和 client：refer的实现
+service：export 和 client：refer的实现 loadService实现
+day 11(4-17)   
+day 12(4-18)：  
+开始注册发现 使用 zookeeper 进行注册和发现
