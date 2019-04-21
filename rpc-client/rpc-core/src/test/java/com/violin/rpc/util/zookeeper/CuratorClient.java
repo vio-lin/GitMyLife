@@ -3,11 +3,13 @@ package com.violin.rpc.util.zookeeper;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.framework.recipes.cache.*;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -43,8 +45,22 @@ public class CuratorClient {
 //        System.out.println(childList);
         // 使用watch来监控 服务上节点的变化
         client.getChildren().usingWatcher(new MyCuratorClintWather()).forPath(path);
-        byte[] content = client.getData()
-                .usingWatcher(new MyCuratorClintWather()).forPath(path);
+        client.getChildren().usingWatcher(new MyCuratorClintWather()).forPath(path);
+//        byte[] content = client.getData()
+//                .usingWatcher(new MyCuratorClintWather()).forPath(path);
+        // cache总共有三种 NodeCache PathChildren 以及 Tree
+        PathChildrenCache pathChildrenCache = new PathChildrenCache(client, path, true);
+        pathChildrenCache.start();
+        pathChildrenCache.getListenable().addListener(new PathChildrenCacheListener() {
+            @Override
+            public void childEvent(CuratorFramework client, PathChildrenCacheEvent event) throws Exception {
+                List<ChildData> data = pathChildrenCache.getCurrentData();
+                for (ChildData child : data) {
+                    System.out.println(child.getPath() + "  " + new String(child.getData()));
+                }
+            }
+        });
+
         System.in.read();
     }
 
@@ -53,7 +69,8 @@ public class CuratorClient {
         client.start();
         return client;
     }
-    static class MyCuratorClintWather implements Watcher{
+
+    static class MyCuratorClintWather implements Watcher {
 
         @Override
         public void process(WatchedEvent event) {

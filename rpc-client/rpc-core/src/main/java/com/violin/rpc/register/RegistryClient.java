@@ -7,6 +7,7 @@ import com.violin.rpc.common.RpcURL;
  * Date: 2019-04-21
  */
 public interface RegistryClient {
-    public void addNode(RpcURL url);
-    public void addWatter();
+    void doRegister(RpcURL url);
+
+    void doSubscribe(RpcURL url, Subscriber subscriber);
 }

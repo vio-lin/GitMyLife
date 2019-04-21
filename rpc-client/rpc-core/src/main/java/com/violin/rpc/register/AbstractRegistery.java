@@ -6,8 +6,8 @@ import com.violin.rpc.common.RpcURL;
  * @author guo.lin  2019/4/18
  */
 public abstract class AbstractRegistery implements Registry {
-  private String host;
-  private int port;
+  protected String host;
+  protected int port;
 
   public AbstractRegistery(String host, int port) {
     this.host = host;
@@ -28,4 +28,5 @@ public abstract class AbstractRegistery implements Registry {
 
   public abstract void doSubscribe(RpcURL url);
 
+  public abstract void doSubscribe(RpcURL url, Subscriber subscriber);
 }
