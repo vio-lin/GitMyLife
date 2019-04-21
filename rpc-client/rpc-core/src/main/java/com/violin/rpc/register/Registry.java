@@ -6,4 +6,5 @@ package com.violin.rpc.register;
 public interface Registry {
   void doRegister();
   void doSubscribe();
+  RegistryClient getRegistryClient();
 }
