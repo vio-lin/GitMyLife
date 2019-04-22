@@ -25,6 +25,7 @@ public class ZooKeeperClient implements RegistryClient {
         try {
             String path = getRegisterPath(url);
             client.create().forPath(path);
+            client.setData(url.toString().getBytes()).forPath(path);
         } catch (Exception e) {
             e.printStackTrace();
         }

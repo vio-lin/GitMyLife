@@ -1,5 +1,6 @@
 package com.violin.rpc.transport.nett4;
 
+import com.violin.rpc.common.RpcURL;
 import com.violin.rpc.entity.RpcRequest;
 import com.violin.rpc.transport.BaseClient;
 import io.netty.bootstrap.Bootstrap;
@@ -10,16 +11,12 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-
-import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static com.violin.rpc.constants.Constants.HOST_ADDRESS;
-import static com.violin.rpc.constants.Constants.PORT;
 import static com.violin.rpc.constants.Constants.THREAD_COUNT;
 
 /**
@@ -32,12 +29,12 @@ public class NettyClient implements BaseClient {
   private ChannelFuture f;
   private AtomicLong messageId = new AtomicLong();
 
-  public NettyClient(Map<String, String> param) {
-    String portString = param.get(PORT);
-    String threadsString = param.get(THREAD_COUNT);
-    String hostString = param.get(HOST_ADDRESS);
+  public NettyClient(RpcURL url) {
+    int port = url.getPort();
+    String threadsString = url.getParameter().get(THREAD_COUNT);
+    String hostString = url.getHost();
     try {
-      int port = Integer.parseInt(portString);
+
       int threads = Integer.parseInt(threadsString);
       Bootstrap b = new Bootstrap();
       // TODO 线程池扩展放在后面
