@@ -75,3 +75,6 @@ ady 15(4-21): 使用curato开发zookeeper 客户端，客户端的注册发现�
  
 **TODO**
 > 1. nettyClient 以及 Zookeeper 可以共用的或许不需要每次都新建
+稍微有个过时的API 看不到新的api文档  
+zookeeper的版本需要升级到 3.5.0以上
+关于订阅的事件处理 本地是否还要缓存

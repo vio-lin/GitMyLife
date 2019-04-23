@@ -15,6 +15,7 @@ import com.violin.rpc.register.Subscriber;
 import com.violin.rpc.register.zookeeper.ZooKeepRegistry;
 import com.violin.rpc.transport.BaseClient;
 import com.violin.rpc.transport.TransportBase;
+import com.violin.rpc.transport.nett4.NettyTransport;
 import com.violin.rpc.util.ClassDesUtils;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
@@ -24,6 +25,7 @@ import java.lang.reflect.Proxy;
 import java.time.Instant;
 import java.util.List;
 import java.util.ServiceLoader;
+import java.util.concurrent.TimeUnit;
 
 import static com.violin.rpc.constants.Constants.IO_THREAD_COUNT;
 
@@ -31,14 +33,15 @@ import static com.violin.rpc.constants.Constants.IO_THREAD_COUNT;
  * @author guo.lin  2019/4/22
  */
 public class RegisterProxy {
-  public static void main(String[] args) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+  public static void main(String[] args) throws IllegalAccessException, InstantiationException, InvocationTargetException, InterruptedException {
     RegisterProxy application = new RegisterProxy();
     ServiceLoader<TransportBase> transportLoader = ServiceLoader.load(TransportBase.class);
-    TransportBase transportBase = null;
+    TransportBase transportBase = new NettyTransport();
     for(TransportBase base : transportLoader){
       transportBase = base;
     }
     application.exportService(transportBase);
+    TimeUnit.SECONDS.sleep(2);
     application.invokeService(transportBase);
   }
 
@@ -51,8 +54,9 @@ public class RegisterProxy {
    */
   private void exportService(TransportBase transportBase) throws IllegalAccessException, InvocationTargetException, InstantiationException {
     ProxyFactory proxyFactory = ProxyFactory.getInstance();
-    RpcURL registryUrl = RpcURL.valueOf("Register://127.0.0.1:2181");
     RpcURL serviceUrl = RpcURL.valueOf("violin://localhost:8080/"+DemoService.class.getName()+"?"+IO_THREAD_COUNT+"=3&"+"THREAD_COUNT="+"100");
+    // TODO 加一个从服务url 到注册url的方法
+    RpcURL registryUrl = RpcURL.valueOf("Register://127.0.0.1:2181/"+DemoService.class.getName()+"?"+IO_THREAD_COUNT+"=3&"+"THREAD_COUNT="+"100");
     Class<?> interfaceClass = DemoService.class;
     Class<?> serviceImplClass = ServiceImpl.class;
     // TODO 这段换成spring的注入
@@ -99,7 +103,7 @@ public class RegisterProxy {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
       //TODO config should be remove to config code
-      RpcURL registryUrl = RpcURL.valueOf("Register://127.0.0.1:2181");
+      RpcURL registryUrl = RpcURL.valueOf("Register://127.0.0.1:2181/"+DemoService.class.getName()+"?"+IO_THREAD_COUNT+"=3&"+"THREAD_COUNT="+"100");
       RpcURL subscribeUrl = RpcURL.valueOf("violin://localhost:8080/"+DemoService.class.getName()+"?"+IO_THREAD_COUNT+"=3&"+"THREAD_COUNT="+"100");
       dogetURL(registryUrl,subscribeUrl);
 
@@ -107,7 +111,7 @@ public class RegisterProxy {
       response.setResponse("来自服务端的操作");
       response.setInstant(Instant.now());
       BaseClient baseClient = transportBase.createClient(serverList.get(0));
-      // 下面是来做loadbalance的
+      //TODO  剩下一点loadBalance的方法
       RpcRequest request = new RpcRequest();
       RpcInvocation invocation = new RpcInvocation();
       invocation.setRequestType(ClassDesUtils.getParameterType(method.getParameterTypes()));

@@ -1,5 +1,6 @@
 package com.violin.rpc.transport.nett4;
 
+import com.google.common.base.Strings;
 import com.violin.rpc.common.RpcURL;
 import com.violin.rpc.transport.BaseServer;
 import io.netty.bootstrap.ServerBootstrap;
@@ -36,7 +37,13 @@ public class NettyServer implements BaseServer {
   @Override
   public void run() {
     int ioThreads = Integer.parseInt(url.getParameter().get(IO_THREAD_COUNT));
-    int threadCount = Integer.parseInt(url.getParameter().get(THREAD_COUNT));
+    String threadCountStr = url.getParameter().get(THREAD_COUNT);
+    int threadCount;
+    if(Strings.isNullOrEmpty(threadCountStr)){
+      threadCount = 200;
+    }else{
+      threadCount = Integer.parseInt(threadCountStr);
+    }
     int port = url.getPort();
     boosGroup = new NioEventLoopGroup(ioThreads);
     ThreadPoolExecutor executor = new ThreadPoolExecutor(0, Integer.MAX_VALUE,

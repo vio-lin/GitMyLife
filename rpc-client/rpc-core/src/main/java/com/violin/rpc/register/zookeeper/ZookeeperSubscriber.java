@@ -1,5 +1,6 @@
 package com.violin.rpc.register.zookeeper;
 
+import com.violin.rpc.entity.NotifyEvent;
 import com.violin.rpc.register.Subscriber;
 
 /**
@@ -7,8 +8,9 @@ import com.violin.rpc.register.Subscriber;
  * Date: 2019-04-21
  */
 public class ZookeeperSubscriber implements Subscriber {
+
     @Override
-    public void notify(String url) {
+    public void notify(NotifyEvent event) {
 
     }
 }

@@ -13,7 +13,8 @@ public class ZooKeepRegistry extends AbstractRegistry {
 
   public ZooKeepRegistry(RpcURL url) {
     super(url);
-    this.client = new ZooKeeperClient(super.url.toString());
+    String registerAddress = url.getHost()+":"+url.getPort();
+    this.client = new ZooKeeperClient(registerAddress);
   }
 
   @Override
