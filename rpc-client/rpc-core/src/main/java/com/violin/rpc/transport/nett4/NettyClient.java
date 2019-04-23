@@ -1,5 +1,6 @@
 package com.violin.rpc.transport.nett4;
 
+import com.google.common.base.Strings;
 import com.violin.rpc.common.RpcURL;
 import com.violin.rpc.entity.RpcRequest;
 import com.violin.rpc.transport.BaseClient;
@@ -31,11 +32,15 @@ public class NettyClient implements BaseClient {
 
   public NettyClient(RpcURL url) {
     int port = url.getPort();
+    // TODO这边没有数据应该设定一个新的
     String threadsString = url.getParameter().get(THREAD_COUNT);
+    int threads = 200;
+    if(!Strings.isNullOrEmpty(threadsString)){
+      threads = Integer.parseInt(threadsString);
+    }
     String hostString = url.getHost();
     try {
 
-      int threads = Integer.parseInt(threadsString);
       Bootstrap b = new Bootstrap();
       // TODO 线程池扩展放在后面
       ThreadPoolExecutor executor = new ThreadPoolExecutor(threads, threads,

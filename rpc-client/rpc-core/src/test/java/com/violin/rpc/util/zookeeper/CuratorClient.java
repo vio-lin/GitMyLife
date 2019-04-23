@@ -3,10 +3,6 @@ package com.violin.rpc.util.zookeeper;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
-import org.apache.curator.framework.recipes.cache.ChildData;
-import org.apache.curator.framework.recipes.cache.PathChildrenCache;
-import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
-import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
@@ -25,9 +21,9 @@ public class CuratorClient {
     String zookeeperConnectionString = "localhost:2181";
     RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
     CuratorFramework client = application.constructClient(zookeeperConnectionString, retryPolicy);
-    String path = "/myPath";
+    String path = "/myPath/18.21.30.21:8080";
     byte[] payload = "MyTestData".getBytes();
-    // 在path下面添加 对应的数据
+//     在path下面添加 对应的数据
 //        client.create().forPath(path, payload);
     // 使用断开连接就消失方式
 //         client.create().withMode(CreateMode.EPHEMERAL).forPath(path, payload);
@@ -49,17 +45,23 @@ public class CuratorClient {
 //        byte[] content = client.getData()
 //                .usingWatcher(new MyCuratorClintWather()).forPath(path);
     // cache总共有三种 NodeCache PathChildren 以及 Tree
-        PathChildrenCache pathChildrenCache = new PathChildrenCache(client, path, true);
-        pathChildrenCache.start();
-        pathChildrenCache.getListenable().addListener(new PathChildrenCacheListener() {
-            @Override
-            public void childEvent(CuratorFramework client, PathChildrenCacheEvent event) throws Exception {
-                List<ChildData> data = pathChildrenCache.getCurrentData();
-                for (ChildData child : data) {
-                    System.out.println(child.getPath() + "  " + new String(child.getData()));
-                }
-            }
-        });
+//        PathChildrenCache pathChildrenCache = new PathChildrenCache(client, path, true);
+//        pathChildrenCache.start();
+//        pathChildrenCache.getListenable().addListener(new PathChildrenCacheListener() {
+//            @Override
+//            public void childEvent(CuratorFramework client, PathChildrenCacheEvent event) throws Exception {
+//                List<ChildData> data = pathChildrenCache.getCurrentData();
+//                for (ChildData child : data) {
+//                    System.out.println(child.getPath() + "  " + new String(child.getData()));
+//                }
+//            }
+//        });
+    //创建前面需要检查下 节点存在不存在
+//      Stat stat = client.checkExists().forPath("/myPath");
+//    System.out.println(stat);
+    List<String> childString = client.getChildren().forPath("/myPath");
+    System.out.println(childString);
+
     System.in.read();
   }
 

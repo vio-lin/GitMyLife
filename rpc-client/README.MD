@@ -25,7 +25,7 @@ DataLength 保存数据长度
 使用Interface作为的服务的母节点，后面再添加一个节点用来保存分组或者版本信息  
 #### 3.2.1 节点数据设计
 节点中的数据必须保证，客户端可以发起远程调用，需要包含的参数    
-机器的ip，端口 就好了。 剩下的Invocation中可以传递的。  
+机器的ip：端口 就好了。 剩下的Invocation中可以传递的。  
 ### 3.3 代理生成的服务客户端
 ### 3.4 IDL生成的JAVA代码
 ### 3.5 Spring 和 SpringBoot等框架适配
@@ -72,9 +72,9 @@ day 12(4-18)：
 开始注册发现 使用 zookeeper 进行注册和发现
 day 14(4-19): 熟悉zookeeper的api watcher 
 ady 15(4-21): 使用curato开发zookeeper 客户端，客户端的注册发现开始
- 
+day 17(4-23): 节点定义设置， 
 **TODO**
 > 1. nettyClient 以及 Zookeeper 可以共用的或许不需要每次都新建
 稍微有个过时的API 看不到新的api文档  
 zookeeper的版本需要升级到 3.5.0以上
-关于订阅的事件处理 本地是否还要缓存
+

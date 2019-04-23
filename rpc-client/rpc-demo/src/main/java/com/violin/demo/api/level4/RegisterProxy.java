@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.concurrent.TimeUnit;
@@ -86,7 +87,7 @@ public class RegisterProxy {
 
   static class MyRpcHandler implements InvocationHandler,Subscriber {
     TransportBase transportBase;
-    List<RpcURL> serverList;
+    List<RpcURL> serverList = new ArrayList<>();
 
     public MyRpcHandler(TransportBase transportBase) {
       this.transportBase = transportBase;

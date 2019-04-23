@@ -24,6 +24,6 @@ public class ZooKeepRegistry extends AbstractRegistry {
 
   @Override
   public void doSubscribe(RpcURL url, Subscriber subscriber) {
-    client.doSubscribe(url,subscriber );
+    client.doSubscribe(url,subscriber);
   }
 }
