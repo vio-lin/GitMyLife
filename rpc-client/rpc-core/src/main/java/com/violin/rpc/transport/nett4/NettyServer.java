@@ -1,5 +1,7 @@
 package com.violin.rpc.transport.nett4;
 
+import com.google.common.base.Strings;
+import com.violin.rpc.common.RpcURL;
 import com.violin.rpc.transport.BaseServer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -9,15 +11,12 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-
-import java.util.Map;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import static com.violin.rpc.constants.Constants.IO_THREAD_COUNT;
-import static com.violin.rpc.constants.Constants.PORT;
 import static com.violin.rpc.constants.Constants.THREAD_COUNT;
 
 /**
@@ -29,16 +28,23 @@ public class NettyServer implements BaseServer {
   private EventLoopGroup boosGroup;
   private EventLoopGroup workGroup;
   private ChannelFuture f;
-  Map<String, String> param;
+  private RpcURL url;
 
-  public NettyServer(Map<String, String> param) {
-    this.param = param;
+  public NettyServer(RpcURL url) {
+    this.url = url;
   }
 
+  @Override
   public void run() {
-    int ioThreads = Integer.parseInt(param.get(IO_THREAD_COUNT));
-    int threadCount = Integer.parseInt(param.get(THREAD_COUNT));
-    int port = Integer.parseInt(param.get(PORT));
+    int ioThreads = Integer.parseInt(url.getParameter().get(IO_THREAD_COUNT));
+    String threadCountStr = url.getParameter().get(THREAD_COUNT);
+    int threadCount;
+    if(Strings.isNullOrEmpty(threadCountStr)){
+      threadCount = 200;
+    }else{
+      threadCount = Integer.parseInt(threadCountStr);
+    }
+    int port = url.getPort();
     boosGroup = new NioEventLoopGroup(ioThreads);
     ThreadPoolExecutor executor = new ThreadPoolExecutor(0, Integer.MAX_VALUE,
             60L, TimeUnit.SECONDS,
@@ -68,6 +74,7 @@ public class NettyServer implements BaseServer {
     }
   }
 
+  @Override
   public void close() {
     if (f != null) {
       try {

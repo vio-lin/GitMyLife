@@ -1,6 +1,6 @@
 package com.violin.rpc.transport;
 
-import java.util.Map;
+import com.violin.rpc.common.RpcURL;
 
 /**
  * @author lin
@@ -10,16 +10,16 @@ public interface TransportBase {
     /**
      * url 传递服务线程之类的参数
      *
-     * @param map
+     * @param url
      * @return
      */
-    BaseClient createClient(Map<String,String> map);
+    BaseClient createClient(RpcURL url);
 
     /**
      * url 传递服务线程之类的参数
      *
-     * @param map
+     * @param url
      * @return
      */
-    BaseServer createServer(Map<String,String> map);
+    BaseServer createServer(RpcURL url);
 }

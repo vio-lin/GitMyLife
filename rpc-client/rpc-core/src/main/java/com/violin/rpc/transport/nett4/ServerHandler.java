@@ -22,8 +22,8 @@ public class ServerHandler extends io.netty.channel.ChannelInboundHandlerAdapter
             RpcRequest request = (RpcRequest) msg;
             RpcInvocation invocation = (RpcInvocation) request.getObject();
             Class<?> interfaceClass = getClass(invocation.getClassName());
-            Class<?> paramter = getClass(invocation.getRequestType());
-            Method method = interfaceClass.getMethod(invocation.getMethodName(),new Class<?>[]{paramter});
+            Class<?> parameter = getClass(invocation.getRequestType());
+            Method method = interfaceClass.getMethod(invocation.getMethodName(),new Class<?>[]{parameter});
             Object proxy = proxyFactory.getProxy(interfaceClass);
             Object response = method.invoke(proxy,invocation.getParameters());
             RpcResponse responseMessage = new RpcResponse(request.getId()+1);

@@ -157,11 +157,6 @@ public class RpcCodecAdapter {
     return null;
   }
 
-  //TODO 考虑没有参数 或者 Invocation里面直接存储的是Class<?>[]
-  private String[] stringToClassArray(String parameterString) {
-    return parameterString.split(",");
-  }
-
   private class InternalEncode extends MessageToByteEncoder {
 
     @Override
@@ -185,7 +180,7 @@ public class RpcCodecAdapter {
         out.writeInt(requestBody.length);
         out.writeBytes(requestBody);
       } else {
-        // encode request
+        // encode response
         RpcResponse request = (RpcResponse) msg;
         out.writeByte(MAGIC_HIGH);
         out.writeByte(MAGIC_HIGH);

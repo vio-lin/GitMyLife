@@ -1,6 +1,5 @@
 package com.violin.rpc.transport;
 
-import java.net.URL;
 
 /**
  *  传输层可以使用多种实现
@@ -9,4 +8,7 @@ import java.net.URL;
  */
 public interface BaseServer {
 
+  void run();
+
+  void close();
 }

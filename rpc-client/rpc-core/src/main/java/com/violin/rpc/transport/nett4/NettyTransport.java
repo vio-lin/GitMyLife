@@ -1,5 +1,6 @@
 package com.violin.rpc.transport.nett4;
 
+import com.violin.rpc.common.RpcURL;
 import com.violin.rpc.transport.BaseClient;
 import com.violin.rpc.transport.BaseServer;
 import com.violin.rpc.transport.TransportBase;
@@ -13,12 +14,12 @@ import java.util.Map;
 public class NettyTransport implements TransportBase {
 
     @Override
-    public BaseClient createClient(Map<String, String> params) {
-        return new NettyClient(params);
+    public BaseClient createClient(RpcURL url) {
+        return new NettyClient(url);
     }
 
     @Override
-    public BaseServer createServer(Map<String, String> params) {
-        return new NettyServer(params);
+    public BaseServer createServer(RpcURL url) {
+        return new NettyServer(url);
     }
 }

@@ -12,6 +12,9 @@ public class RpcRequest implements Serializable {
   private String event;
   public static final String HEART_BEAT_EVENT = null;
 
+  public RpcRequest(){
+  }
+
   public RpcRequest(long id) {
     this.id = id;
   }
