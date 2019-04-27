@@ -33,6 +33,7 @@ import static com.violin.rpc.constants.Constants.IO_THREAD_COUNT;
 /**
  * @author guo.lin  2019/4/22
  */
+@SuppressWarnings("all")
 public class RegisterProxy {
   public static void main(String[] args) throws IllegalAccessException, InstantiationException, InvocationTargetException, InterruptedException {
     RegisterProxy application = new RegisterProxy();
@@ -106,7 +107,7 @@ public class RegisterProxy {
       //TODO config should be remove to config code
       RpcURL registryUrl = RpcURL.valueOf("Register://127.0.0.1:2181/"+DemoService.class.getName()+"?"+IO_THREAD_COUNT+"=3&"+"THREAD_COUNT="+"100");
       RpcURL subscribeUrl = RpcURL.valueOf("violin://localhost:8080/"+DemoService.class.getName()+"?"+IO_THREAD_COUNT+"=3&"+"THREAD_COUNT="+"100");
-      dogetURL(registryUrl,subscribeUrl);
+      doGetURL(registryUrl,subscribeUrl);
 
       DemoResponse response = new DemoResponse();
       response.setResponse("来自服务端的操作");
@@ -126,7 +127,7 @@ public class RegisterProxy {
       return response;
     }
 
-    private void dogetURL(RpcURL registryUrl,RpcURL subscribeUrl) {
+    private void doGetURL(RpcURL registryUrl, RpcURL subscribeUrl) {
       ZooKeepRegistry registry = new ZooKeepRegistry(registryUrl);
       registry.doSubscribe(subscribeUrl, this);
     }

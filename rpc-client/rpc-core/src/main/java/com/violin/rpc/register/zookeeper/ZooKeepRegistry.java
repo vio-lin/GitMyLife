@@ -1,18 +1,18 @@
 package com.violin.rpc.register.zookeeper;
 
 import com.violin.rpc.common.RpcURL;
-import com.violin.rpc.register.AbstractRegistry;
+import com.violin.rpc.register.Registry;
 import com.violin.rpc.register.RegistryClient;
 import com.violin.rpc.register.Subscriber;
 
 /**
  * @author guo.lin  2019/4/18
  */
-public class ZooKeepRegistry extends AbstractRegistry {
+public class ZooKeepRegistry implements Registry {
+  public RpcURL url;
   private RegistryClient client;
 
   public ZooKeepRegistry(RpcURL url) {
-    super(url);
     String registerAddress = url.getHost()+":"+url.getPort();
     this.client = new ZooKeeperClient(registerAddress);
   }

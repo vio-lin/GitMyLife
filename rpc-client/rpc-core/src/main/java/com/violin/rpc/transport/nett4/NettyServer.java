@@ -48,11 +48,8 @@ public class NettyServer implements BaseServer {
     boosGroup = new NioEventLoopGroup(ioThreads);
     ThreadPoolExecutor executor = new ThreadPoolExecutor(0, Integer.MAX_VALUE,
             60L, TimeUnit.SECONDS,
-            new SynchronousQueue<Runnable>(), new ThreadFactory() {
-      @Override
-      public Thread newThread(Runnable r) {
+            new SynchronousQueue<Runnable>(),(Runnable r)-> {
         return new Thread(r, SERVER_WORK_THREAD);
-      }
     });
     boosGroup = new NioEventLoopGroup(ioThreads);
     workGroup = new NioEventLoopGroup(threadCount, executor);

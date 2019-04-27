@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
  * @author guo.lin 2019/4/2
  */
 public class MyProxy {
-  private static final String rt = "\r";
+  private static final String RT = "\r";
 
   public static Object newProxyInstance(MyClassLoader loader,Class<?> interfaces,MyInvocationHandler handler)throws IllegalArgumentException{
     if( handler == null){
@@ -24,13 +24,13 @@ public class MyProxy {
 
     //根据接口构造代理类： $MyProxy0
     Method[] methods = interfaces.getMethods();
-    StringBuffer proxyClassString = new StringBuffer();
+    StringBuilder proxyClassString = new StringBuilder();
     proxyClassString.append("package ")
-            .append(loader.getProxyClassPackage()).append(";").append(rt)
-            .append("import java.lang.reflect.Method;").append(rt)
-            .append("public class $MyProxy0 implements ").append(interfaces.getName()).append("{").append(rt)
-            .append("MyInvocationHandler h;").append(rt)
-            .append("public $MyProxy0(MyInvocationHandler h){").append(rt).append("this.h = h;}").append(rt)
+            .append(loader.getProxyClassPackage()).append(";").append(RT)
+            .append("import java.lang.reflect.Method;").append(RT)
+            .append("public class $MyProxy0 implements ").append(interfaces.getName()).append("{").append(RT)
+            .append("MyInvocationHandler h;").append(RT)
+            .append("public $MyProxy0(MyInvocationHandler h){").append(RT).append("this.h = h;}").append(RT)
             .append(getMethodString(methods,interfaces)).append("}");
     //写入java文件 进行编译
     String fileName = loader.getDir()+ File.separator+"$MyProxy0.java";
@@ -55,12 +55,12 @@ public class MyProxy {
               .append("Method method1 = ").append(interfaces.getName())
               .append(".class.getMethod(\"").append(method.getName())
               .append("\", new Class[]{});")
-              .append("this.h.invoke(this,method1,null);}").append(rt);
+              .append("this.h.invoke(this,method1,null);}").append(RT);
     }
     return methodStringBuffer.toString();
   }
 
-  private static void compile(StringBuffer proxyClassString,File myProxyFile) throws IOException {
+  private static void compile(StringBuilder proxyClassString,File myProxyFile) throws IOException {
     FileCopyUtils.copy(proxyClassString.toString().getBytes(),myProxyFile);
     JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
     StandardJavaFileManager standardFileManager = javaCompiler.getStandardFileManager(null, null,null );
