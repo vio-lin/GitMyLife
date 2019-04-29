@@ -78,7 +78,6 @@ public class ZooKeeperClientTest {
 
     @Override
     public void process(WatchedEvent event) {
-      //TODO 会注册到某个特别的目录中去
       // 假如目录下的路径有更新 会推送消息
       // 客户端重新更新 instanceList
       event.getPath();

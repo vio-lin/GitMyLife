@@ -68,7 +68,7 @@ public class RpcCodecAdapter {
             break;
           }
         }
-        // TODO 这边需要重新走一遍解析
+        return;
       }
 
       // check length
