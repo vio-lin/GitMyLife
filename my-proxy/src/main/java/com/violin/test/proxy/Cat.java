@@ -3,6 +3,7 @@ package com.violin.test.proxy;
 /**
  * @author guo.lin  2019/4/2
  */
+@SuppressWarnings("all")
 public class Cat implements Animal {
 
   @Override

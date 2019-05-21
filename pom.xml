@@ -21,6 +21,7 @@
         <!--手写Proxy-->
         <module>my-proxy</module>
         <module>spring-inject</module>
+        <module>java.eight</module>
         <!--扩展自己的spring注入-->
     </modules>
 

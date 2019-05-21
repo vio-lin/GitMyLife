@@ -1,14 +1,12 @@
 package com.violin.rpc.util;
 
-import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
-
-import java.io.ByteArrayInputStream;
-
 /**
  * @author lin
  * Date: 2019-04-11
  */
 public class ByteUtil {
+    private  ByteUtil(){}
+
     /**
      * <<      :     左移运算符，num << 1,相当于num乘以2
      * >>      :     右移运算符，num >> 1,相当于num除以2
