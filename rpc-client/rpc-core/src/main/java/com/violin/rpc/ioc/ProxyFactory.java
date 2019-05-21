@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ProxyFactory {
     private static volatile ProxyFactory instance;
     private static final Object lock = new Object();
-    public static Map<Class,Object> proxyMap = new ConcurrentHashMap<>();
+    public static final Map<Class,Object> proxyMap = new ConcurrentHashMap<>();
 
     private ProxyFactory(){}
 

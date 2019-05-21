@@ -21,6 +21,8 @@ import java.util.List;
  * @author lin Date: 2019-04-07
  */
 public class RpcCodecAdapter {
+  // TODO 后续添加一个logger
+
   // header length
   private static final int HEADER_LENGTH = 16;
 
@@ -33,9 +35,6 @@ public class RpcCodecAdapter {
   private static final byte FLAG_REQUEST = (byte) 0x80;
   private static final byte FLAG_EVENT = (byte) 0x40;
   private static final byte SERIALIZATION_MASK = 0x07;
-
-  private long id;
-  // TODO 后续添加一个logger
 
   private final ChannelHandler encode = new InternalEncode();
   private final ChannelHandler decode = new InternalDecoder();
@@ -69,7 +68,7 @@ public class RpcCodecAdapter {
             break;
           }
         }
-        // TODO 这边需要重新走一遍解析
+        return;
       }
 
       // check length

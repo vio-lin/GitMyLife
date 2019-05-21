@@ -45,13 +45,7 @@ public class NettyClient implements BaseClient {
       // TODO 线程池扩展放在后面
       ThreadPoolExecutor executor = new ThreadPoolExecutor(threads, threads,
               0L, TimeUnit.MILLISECONDS,
-              // TODO 转换成Lambda
-              new LinkedBlockingQueue<>(), new ThreadFactory() {
-        @Override
-        public Thread newThread(Runnable r) {
-          return new Thread(r, CLIENT_THREAD_NAME);
-        }
-      });
+              new LinkedBlockingQueue<>(), (Runnable r)->{ return new Thread(r, CLIENT_THREAD_NAME);});
       workGroup = new NioEventLoopGroup(threads, executor);
       b.group(workGroup);
       b.channel(NioSocketChannel.class);

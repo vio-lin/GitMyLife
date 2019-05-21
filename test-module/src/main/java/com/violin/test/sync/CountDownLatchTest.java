@@ -9,8 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Date: 2019-03-31
  */
 public class CountDownLatchTest {
-   private static AtomicInteger runingThreadCount = new AtomicInteger(0);
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args){
         int threadCount = 10;
         CountDownLatch latch = new CountDownLatch(threadCount);
         for (int i = 0; i < 30; i++) {

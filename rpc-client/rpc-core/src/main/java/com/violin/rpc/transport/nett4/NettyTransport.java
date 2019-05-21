@@ -5,8 +5,6 @@ import com.violin.rpc.transport.BaseClient;
 import com.violin.rpc.transport.BaseServer;
 import com.violin.rpc.transport.TransportBase;
 
-import java.util.Map;
-
 /**
  * @author lin
  * Date: 2019-04-13

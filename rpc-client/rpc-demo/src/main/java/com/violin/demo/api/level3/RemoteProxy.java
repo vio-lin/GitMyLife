@@ -46,7 +46,7 @@
 //    ProxyFactory proxyFactory = ProxyFactory.getInstance();
 //    Class<?> interfaceClass = DemoService.class;
 //    Class<?> serviceImplClass = ServiceImpl.class;
-//    // TODO 这段换成spring的注入
+//     这段换成spring的注入
 //    Constructor<ServiceImpl>[] constructors = (Constructor<ServiceImpl>[]) serviceImplClass.getConstructors();
 //    for (Constructor<ServiceImpl> constructor : constructors) {
 //      if (constructor.getParameterCount() == 0) {
@@ -82,7 +82,7 @@
 //
 //    @Override
 //    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-//      //TODO config should be remove to config code
+//      config should be remove to config code
 //      Map<String, String> param = new HashMap<>();
 //      param.put(PORT, "8080");
 //      param.put(HOST_ADDRESS, "127.0.0.1");
@@ -97,7 +97,7 @@
 //      invocation.setRequestType(ClassDesUtils.getParameterType(method.getParameterTypes()));
 //      invocation.setMethodName(method.getName());
 //      invocation.setParameters(args[0]);
-//      //TODO 这边一定是需要有可以添加服务接口的地方
+//      这边一定是需要有可以添加服务接口的地方
 //      invocation.setClassName(DemoService.class.getName());
 //      request.setObject(invocation);
 //      request.setEvent(null);
