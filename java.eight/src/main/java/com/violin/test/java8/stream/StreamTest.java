@@ -1,4 +1,4 @@
-package com.violin.test.java8;
+package com.violin.test.java8.stream;
 
 /**
  * @author guo.lin  2019/5/20
@@ -18,7 +18,7 @@ import java.util.List;
  * (7) 所有交易中，最高的交易额是多少？
  * (8) 找到交易额最小的交易。
  */
-public class MainTest {
+public class StreamTest {
     public static void main(String[] args) {
         Trader raoul = new Trader("Raoul", "Cambridge");
         Trader mario = new Trader("Mario", "Milan");
