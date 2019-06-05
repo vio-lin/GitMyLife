@@ -1,55 +1,54 @@
 package com.violin.test.java8.future;
 
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
+import java.util.concurrent.Future;
 
 /**
  * @author guo.lin  2019/5/30
  */
 public class FutureTest {
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
-        List<String> shopList = Arrays.asList(new String[]{"shop1","shop2","shop3"});
-//        doSync(shopList);
-        doAsync(shopList);
+    public static void main(String[] args) {
+        callSync();
+        callAsync();
     }
 
-    private static void doSync(List<String> shopList) {
-        DownloadTask task = new DownloadTask();
-        long startTime = System.currentTimeMillis();
-        // 1.改成 stream-> parallelStream 很关键
-        List<String> resultList = shopList.parallelStream().map(a->{
-            try {
-                return task.doSomeThing();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return  null;
-        }).collect(Collectors.toList());
-        System.out.println(System.currentTimeMillis()-startTime);
-        sleep();
-        System.out.println((System.currentTimeMillis()-startTime)+":"+ String.join("|",resultList));
+    private static void callSync() {
+        Shop shop = new Shop("BestShop");
+        long start = System.nanoTime();
+        Double price = shop.getPrice("my favorite product");
+        long invocationTime = ((System.nanoTime() - start) / 1_000_000);
+        System.out.println("Invocation returned after " + invocationTime
+                + " msecs");
+        System.out.printf("Price is %.2f%n", price);
+
     }
 
-    private static void doAsync(List<String> shopList) {
-        DownloadTask task = new DownloadTask();
-        long startTime = System.currentTimeMillis();
-        List<CompletableFuture<String>> resultFutureList = shopList.stream().map(a->{ return task.doSomeThingAsync();}).collect(Collectors.toList());
-        System.out.println(System.currentTimeMillis()-startTime);
-        sleep();
-        List<String> value = null;
-        value = resultFutureList.stream().map(CompletableFuture::join).collect(Collectors.toList());
-        System.out.println((System.currentTimeMillis()-startTime)+":"+String.join("|",value));
-    }
-
-    public static void sleep(){
+    private static void callAsync() {
+        Shop shop = new Shop("BestShop");
+        long start = System.nanoTime();
+        Future<Double> futurePrice = shop.getPriceAsync("my favorite product");
+        long invocationTime = ((System.nanoTime() - start) / 1_000_000);
+        System.out.println("Invocation returned after " + invocationTime
+                + " msecs");
+        // 执行更多任务，比如查询其他商店
+        doSomethingElse();
+        // 在计算商品价格的同时
         try {
-            Thread.sleep(3000);
+            double price = futurePrice.get();
+            System.out.printf("Price is %.2f%n", price);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        long retrievalTime = ((System.nanoTime() - start) / 1_000_000);
+        System.out.println("Price returned after " + retrievalTime + " msecs");
+    }
+
+    public static void doSomethingElse() {
+        try {
+            Thread.sleep(1000L);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
+
 }

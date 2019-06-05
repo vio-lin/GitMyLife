@@ -20,9 +20,10 @@
         <module>rpc-client</module>
         <!--手写Proxy-->
         <module>my-proxy</module>
+        <!--扩展自己的spring注入-->
         <module>spring-inject</module>
         <module>java.eight</module>
-        <!--扩展自己的spring注入-->
+        <module>hystrix.test</module>
     </modules>
 
     <properties>
