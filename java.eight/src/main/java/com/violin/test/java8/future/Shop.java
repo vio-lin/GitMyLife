@@ -2,7 +2,6 @@ package com.violin.test.java8.future;
 
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 
 /**
  * @author guo.lin  2019/5/30
@@ -15,21 +14,24 @@ public class Shop {
         this.shopName = shopName;
     }
 
-    public double getPrice(String product) {
-        return calculatePrice(product);
+    public String getPrice(String product) {
+        double price = calculatePrice(product);
+        Discount.Code code = Discount.Code.values()[
+                random.nextInt(Discount.Code.values().length)];
+        return String.format("%s:%.2f:%s", shopName, price, code);
     }
 
-    public Future<Double> getPriceAsync(String product) {
+    public CompletableFuture<Double> getPriceAsync(String product) {
         return createFutureFactory(product);
 //        return createFutureSimple(product);
     }
 
-    private Future<Double> createFutureFactory(String product) {
+    private CompletableFuture<Double> createFutureFactory(String product) {
         return CompletableFuture.supplyAsync(()-> calculatePrice(product));
     }
 
     // 两种构造的方式：1.使用基本的构造方式 2.使用类中的工厂方法
-    private Future<Double> createFutureSimple(String product) {
+    private CompletableFuture<Double> createFutureSimple(String product) {
         CompletableFuture<Double> futurePrice = new CompletableFuture<>();
         new Thread( () -> {
             try {
@@ -58,4 +60,7 @@ public class Shop {
     }
 
 
+    public Object getName() {
+        return this.shopName;
+    }
 }

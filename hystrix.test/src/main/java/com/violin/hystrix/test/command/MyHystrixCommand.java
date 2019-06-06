@@ -1,4 +1,4 @@
-package com.violin.hystrix.test;
+package com.violin.hystrix.test.command;
 
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;

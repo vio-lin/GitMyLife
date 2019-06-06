@@ -1,4 +1,4 @@
-package com.violin.hystrix.test;
+package com.violin.hystrix.test.command;
 
 /**
  * @author guo.lin  2019/6/4
