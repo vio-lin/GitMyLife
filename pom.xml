@@ -3,11 +3,19 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.violin.life</groupId>
     <artifactId>earth.online</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+
+    <!-- 使用aliyun maven -->
+    <repositories>
+        <repository>
+            <id>aliyun</id>
+            <name>aliyun</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+        </repository>
+    </repositories>
 
     <modules>
         <!--用来测试一些java基本类或新的技术-->
@@ -20,8 +28,10 @@
         <module>rpc-client</module>
         <!--手写Proxy-->
         <module>my-proxy</module>
-        <module>spring-inject</module>
         <!--扩展自己的spring注入-->
+        <module>spring-inject</module>
+        <!--SpringBoot URL绑定-->
+        <module>spring-boot-mapping</module>
     </modules>
 
     <properties>
