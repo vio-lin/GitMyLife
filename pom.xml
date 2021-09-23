@@ -22,7 +22,7 @@
         <module>my-proxy</module>
         <module>spring-inject</module>
         <module>business-error</module>
-        <!--扩展自己的spring注入-->
+        <module>maven-plugin</module>
     </modules>
 
     <properties>

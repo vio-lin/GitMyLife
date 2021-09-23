@@ -20,4 +20,26 @@
             <artifactId>spring-core</artifactId>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.violin.life</groupId>
+                <artifactId>violin-maven-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <!-- 配置在哪个阶段 插件会被运行-->
+                        <phase>compile</phase>
+                        <goals>
+                            <!--配置插件运行时会触发哪段代码-->
+                            <goal>sayHi</goal>
+                        </goals>
+                        <configuration>
+                            <config.url>www.baidu.com</config.url>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
