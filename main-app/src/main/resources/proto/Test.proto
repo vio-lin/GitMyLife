@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.violin.grpc.demo";
+option java_outer_classname = "DemoGrpcService";
+option objc_class_prefix = "RTG";
+
+// Interface exported by the server.
+service PersonSearchRpc {
+  rpc getUserInfo (PersonRequest) returns (PersonResponse) {}
+}
+
+message UserInfo {
+  int32 id = 1;
+  string name = 2;
+  bool sex = 3;
+  bool isMember = 4;
+}
+
+message PersonRequest {
+  int32 id = 1;
+}
+
+message PersonResponse{
+  string name = 1;
+  UserInfo userInfo = 2;
+}
