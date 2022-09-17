@@ -8,6 +8,12 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.4.2</version>
+    </parent>
+    
     <!-- 使用aliyun maven -->
     <repositories>
         <repository>
@@ -18,25 +24,12 @@
     </repositories>
 
     <modules>
-        <!--用来测试一些java基本类或新的技术-->
-        <module>test-module</module>
-        <!--自己写的测试工具-->
-        <module>test-tool</module>
-        <!-- alibaba dubbo 测试工具-->
-        <module>test-dubbo</module>
-        <!--手写rpc 调用-->
-        <module>rpc-client</module>
-        <!--手写Proxy-->
-        <module>my-proxy</module>
-        <!--扩展自己的spring注入-->
-        <module>spring-inject</module>
         <!--SpringBoot URL绑定-->
         <module>spring-boot-mapping</module>
     </modules>
 
     <properties>
         <guava.version>21.0</guava.version>
-        <spring.version>4.3.9.RELEASE</spring.version>
     </properties>
 
     <dependencyManagement>
@@ -46,21 +39,7 @@
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-beans</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-web</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-core</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
